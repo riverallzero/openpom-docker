@@ -1,0 +1,11 @@
+SMILES,preds
+CC(O)CN,fishy
+CCC(=O)C(=O)O,"buttery, caramellic, sweet"
+O=C(O)CCc1ccccc1,"floral, honey, rose, sweet"
+OCc1ccc(O)cc1,phenolic
+O=Cc1ccc(O)cc1,"almond, sweet"
+O=C(O)c1ccc(O)cc1,phenolic
+CC(=O)O,sour
+CC=O,"ethereal, fruity, nutty, pungent"
+CC(=O)C(C)O,"buttery, sweet"
+CC(C)=O,ethereal
