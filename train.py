@@ -34,7 +34,7 @@ TASKS = [
 ]
 
 # | Get Dataset
-input_file = './lib/data/curated_datasets/curated_GS_LF_merged_4983.csv'
+input_file = './lib/data/GSLF.csv'
 
 featurizer = GraphFeaturizer()
 smiles_field = 'nonStereoSMILES'
