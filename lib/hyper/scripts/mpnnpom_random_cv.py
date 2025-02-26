@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__name__)
 # logging.basicConfig(level=logging.INFO)
 
-DATASET = "openpom/data/curated_datasets/curated_GS_LF_merged_4983.csv"
+DATASET = "./lib/data/GSLF.csv"
 SMILES_FIELD = "nonStereoSMILES"
 with open("./lib/data/odor-description.txt", "r", encoding="utf-8") as file:
     TASKS = [line.strip() for line in file if line.strip()]
