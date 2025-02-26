@@ -16,15 +16,13 @@ class Config:
         Generate hyperparameter combinations
         for random search.
     """
-    PARAMS_DICT: Dict[str, List] = {
-        'sample_param': ['sample_value1', 'sample_value2']
-    }
+
+    PARAMS_DICT: Dict[str, List] = {"sample_param": ["sample_value1", "sample_value2"]}
 
     @classmethod
     def generate_hyperparams_random(
-            cls,
-            n_trials: int = 1,
-            dir: Optional[str] = None) -> Tuple[Dict, str]:
+        cls, n_trials: int = 1, dir: Optional[str] = None
+    ) -> Tuple[Dict, str]:
         """
         Generate hyperparameter combinations for random trials.
 
@@ -44,12 +42,13 @@ class Config:
             File path of saved json file containing generated
             combinations.
         """
-        hyperparameter_combs: List[Dict[
-            str, Any]] = cls._generate_random_hyperparam_values(n=n_trials)
+        hyperparameter_combs: List[Dict[str, Any]] = (
+            cls._generate_random_hyperparam_values(n=n_trials)
+        )
 
         trials_dict: Dict = {}
         for count, params in enumerate(hyperparameter_combs):
-            trials_dict[f'trial_{count+1}'] = params
+            trials_dict[f"trial_{count+1}"] = params
 
         file_name: str = f"{n_trials}_trials_params.json"
         if dir is None:
@@ -64,8 +63,7 @@ class Config:
         return trials_dict, file_path
 
     @classmethod
-    def _generate_random_hyperparam_values(cls,
-                                           n: int) -> List[Dict[str, Any]]:
+    def _generate_random_hyperparam_values(cls, n: int) -> List[Dict[str, Any]]:
         """
         Generates `n` random hyperparameter combinations
         of hyperparameter values
@@ -99,8 +97,7 @@ class Config:
         params_subset: List = []
         for index in indices:
             param: Dict = {}
-            for key, hyperparam_value in zip(hyperparam_keys,
-                                             hyperparam_combs[index]):
+            for key, hyperparam_value in zip(hyperparam_keys, hyperparam_combs[index]):
                 param[key] = hyperparam_value
             params_subset.append(param)
         return params_subset
