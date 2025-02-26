@@ -3,9 +3,9 @@ from deepchem.utils.typing import RDKitAtom
 from deepchem.utils.molecule_feature_utils import one_hot_encode
 
 
-def get_atomic_num_one_hot(atom: RDKitAtom,
-                           allowable_set: List[int],
-                           include_unknown_set: bool = True) -> List[float]:
+def get_atomic_num_one_hot(
+    atom: RDKitAtom, allowable_set: List[int], include_unknown_set: bool = True
+) -> List[float]:
     """
     Get a one-hot feature about atomic number of the given atom.
 
@@ -29,14 +29,12 @@ def get_atomic_num_one_hot(atom: RDKitAtom,
         `len(allowable_set) + 1`.
 
     """
-    return one_hot_encode(atom.GetAtomicNum() - 1, allowable_set,
-                          include_unknown_set)
+    return one_hot_encode(atom.GetAtomicNum() - 1, allowable_set, include_unknown_set)
 
 
 def get_atom_total_valence_one_hot(
-        atom: RDKitAtom,
-        allowable_set: List[int],
-        include_unknown_set: bool = True) -> List[float]:
+    atom: RDKitAtom, allowable_set: List[int], include_unknown_set: bool = True
+) -> List[float]:
     """Get a one-hot feature for total valence of an atom.
 
     Parameters
@@ -59,5 +57,4 @@ def get_atom_total_valence_one_hot(
         `len(allowable_set) + 1`.
 
     """
-    return one_hot_encode(atom.GetTotalValence(), allowable_set,
-                          include_unknown_set)
+    return one_hot_encode(atom.GetTotalValence(), allowable_set, include_unknown_set)

@@ -18,7 +18,7 @@ class CustomPositionwiseFeedForward(nn.Module):
         d_input: int = 1024,
         d_hidden_list: List = [1024],
         d_output: int = 1024,
-        activation: str = 'leakyrelu',
+        activation: str = "leakyrelu",
         dropout_p: float = 0.0,
         dropout_at_input_no_act: bool = False,
         batch_norm: bool = True,
@@ -53,25 +53,25 @@ class CustomPositionwiseFeedForward(nn.Module):
         self.batch_norm: bool = batch_norm
 
         self.activation: Callable[[Any], Any]
-        if activation == 'relu':
+        if activation == "relu":
             self.activation = nn.ReLU()
 
-        elif activation == 'leakyrelu':
+        elif activation == "leakyrelu":
             self.activation = nn.LeakyReLU(0.1)
 
-        elif activation == 'prelu':
+        elif activation == "prelu":
             self.activation = nn.PReLU()
 
-        elif activation == 'tanh':
+        elif activation == "tanh":
             self.activation = nn.Tanh()
 
-        elif activation == 'selu':
+        elif activation == "selu":
             self.activation = nn.SELU()
 
-        elif activation == 'elu':
+        elif activation == "elu":
             self.activation = nn.ELU()
 
-        elif activation == 'linear':
+        elif activation == "linear":
             self.activation = lambda x: x
 
         d_output = d_output if d_output != 0 else d_input
@@ -86,19 +86,18 @@ class CustomPositionwiseFeedForward(nn.Module):
         else:
             linears = [nn.Linear(d_input, d_hidden_list[0])]
             for idx in range(1, len(d_hidden_list)):
-                linears.append(
-                    nn.Linear(d_hidden_list[idx - 1], d_hidden_list[idx]))
+                linears.append(nn.Linear(d_hidden_list[idx - 1], d_hidden_list[idx]))
             linears.append(nn.Linear(d_hidden_list[-1], d_output))
 
         self.linears: nn.ModuleList = nn.ModuleList(linears)
         dropout_layer: nn.Dropout = nn.Dropout(dropout_p)
         self.dropout_p: nn.ModuleList = nn.ModuleList(
-            [dropout_layer for _ in range(self.n_layers)])
+            [dropout_layer for _ in range(self.n_layers)]
+        )
 
         if batch_norm:
             batchnorms: List = [
-                nn.BatchNorm1d(d_hidden_list[idx])
-                for idx in range(len(d_hidden_list))
+                nn.BatchNorm1d(d_hidden_list[idx]) for idx in range(len(d_hidden_list))
             ]
             self.batchnorms: nn.ModuleList = nn.ModuleList(batchnorms)
 
@@ -122,10 +121,7 @@ class CustomPositionwiseFeedForward(nn.Module):
             if self.dropout_at_input_no_act:
                 return [None, self.linears[0](self.dropout_p[0](x))]
             else:
-                return [
-                    None,
-                    self.dropout_p[0](self.activation(self.linears[0](x)))
-                ]
+                return [None, self.dropout_p[0](self.activation(self.linears[0](x)))]
 
         else:
             if self.dropout_at_input_no_act:
@@ -133,19 +129,20 @@ class CustomPositionwiseFeedForward(nn.Module):
 
             if self.batch_norm:
                 for i in range(self.n_layers - 2):
-                    x = self.dropout_p[i](self.activation(self.batchnorms[i](
-                        self.linears[i](x))))
+                    x = self.dropout_p[i](
+                        self.activation(self.batchnorms[i](self.linears[i](x)))
+                    )
 
                 embeddings: torch.Tensor = self.linears[self.n_layers - 2](x)
-                x = self.dropout_p[self.n_layers - 2](self.activation(
-                    self.batchnorms[self.n_layers - 2](embeddings)))
+                x = self.dropout_p[self.n_layers - 2](
+                    self.activation(self.batchnorms[self.n_layers - 2](embeddings))
+                )
             else:
                 for i in range(self.n_layers - 2):
                     x = self.dropout_p[i](self.activation(self.linears[i](x)))
 
                 embeddings = self.linears[self.n_layers - 2](x)
-                x = self.dropout_p[self.n_layers - 2](
-                    self.activation(embeddings))
+                x = self.dropout_p[self.n_layers - 2](self.activation(embeddings))
 
             output: torch.Tensor = self.linears[-1](x)
             return [embeddings, output]

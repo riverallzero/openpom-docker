@@ -75,7 +75,7 @@ class IterativeStratifiedSplitter(Splitter):
         frac_valid: float = 0.1,
         frac_test: float = 0.1,
         seed: Optional[int] = None,
-        log_every_n: Optional[int] = None
+        log_every_n: Optional[int] = None,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Return indices for iterative stratified split
@@ -118,8 +118,7 @@ class IterativeStratifiedSplitter(Splitter):
         train_indices, other_indices = next(stratifier1.split(X1, y1))
 
         temp_dir: str = tempfile.mkdtemp()
-        other_dataset: DiskDataset = dataset.select(other_indices.tolist(),
-                                                    temp_dir)
+        other_dataset: DiskDataset = dataset.select(other_indices.tolist(), temp_dir)
 
         X2: pd.DataFrame
         y2: pd.DataFrame
@@ -128,9 +127,7 @@ class IterativeStratifiedSplitter(Splitter):
         stratifier2: IterativeStratification = IterativeStratification(
             n_splits=2,
             order=self.order,
-            sample_distribution_per_fold=[
-                new_split_ratio, 1 - new_split_ratio
-            ],
+            sample_distribution_per_fold=[new_split_ratio, 1 - new_split_ratio],
             random_state=seed,
         )
 
@@ -140,10 +137,7 @@ class IterativeStratifiedSplitter(Splitter):
         return train_indices, valid_indices, test_indices
 
     def k_fold_split(
-        self,
-        dataset: DiskDataset,
-        k: int,
-        directories: Optional[List[str]] = None
+        self, dataset: DiskDataset, k: int, directories: Optional[List[str]] = None
     ) -> List[Tuple[DiskDataset, DiskDataset]]:
         """
         Parameters
@@ -179,15 +173,14 @@ class IterativeStratifiedSplitter(Splitter):
         cv_datasets: List = []
         split_gen: Iterator = stratifier.split(X, y)
         for fold in range(k):
-            train_dir, cv_dir = directories[2 * fold], directories[2 * fold +
-                                                                   1]
+            train_dir, cv_dir = directories[2 * fold], directories[2 * fold + 1]
             train_indices: np.ndarray
             cv_indices: np.ndarray
             train_indices, cv_indices = next(split_gen)
             train_dataset: DiskDataset = dataset.select(
-                train_indices.tolist(), train_dir)
-            cv_dataset: DiskDataset = dataset.select(cv_indices.tolist(),
-                                                     cv_dir)
+                train_indices.tolist(), train_dir
+            )
+            cv_dataset: DiskDataset = dataset.select(cv_indices.tolist(), cv_dir)
             train_datasets.append(train_dataset)
             cv_datasets.append(cv_dataset)
         return list(zip(train_datasets, cv_datasets))

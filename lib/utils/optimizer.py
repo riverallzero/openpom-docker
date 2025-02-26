@@ -8,7 +8,7 @@ from deepchem.models.optimizers import GradientDescent
 from deepchem.models.optimizers import KFAC
 
 
-def get_optimizer(optimizer_name: str = 'adam') -> Optimizer:
+def get_optimizer(optimizer_name: str = "adam") -> Optimizer:
     """
     Get deepchem optimizer object
 
@@ -24,19 +24,19 @@ def get_optimizer(optimizer_name: str = 'adam') -> Optimizer:
     Optimizer
       Deepchem optimizer object
     """
-    if optimizer_name == 'adam':
+    if optimizer_name == "adam":
         return Adam()
-    elif optimizer_name == 'adagrad':
+    elif optimizer_name == "adagrad":
         return AdaGrad()
-    elif optimizer_name == 'adamw':
+    elif optimizer_name == "adamw":
         return AdamW()
-    elif optimizer_name == 'sparseadam':
+    elif optimizer_name == "sparseadam":
         return SparseAdam()
-    elif optimizer_name == 'rmsprop':
+    elif optimizer_name == "rmsprop":
         return RMSProp()
-    elif optimizer_name == 'sgd':
+    elif optimizer_name == "sgd":
         return GradientDescent()
-    elif optimizer_name == 'kfac':
+    elif optimizer_name == "kfac":
         return KFAC()
     else:
         print("INVALID OPTIMISER NAME!, using ADAM optimizer by default")

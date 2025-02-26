@@ -22,10 +22,12 @@ class CustomMultiLabelLoss(Loss):
     probabilities using a softmax function.
     """
 
-    def __init__(self,
-                 class_imbalance_ratio: Optional[List] = None,
-                 loss_aggr_type: str = 'sum',
-                 device: Optional[str] = None):
+    def __init__(
+        self,
+        class_imbalance_ratio: Optional[List] = None,
+        loss_aggr_type: str = "sum",
+        device: Optional[str] = None,
+    ):
         """
         Parameters
         ---------
@@ -44,22 +46,23 @@ class CustomMultiLabelLoss(Loss):
         else:
             self.class_imbalance_ratio = torch.Tensor(class_imbalance_ratio)
 
-        if loss_aggr_type not in ['sum', 'mean']:
+        if loss_aggr_type not in ["sum", "mean"]:
             raise ValueError(f"Invalid loss aggregate type: {loss_aggr_type}")
         self.loss_aggr_type: str = loss_aggr_type
 
         if device is not None:
             if self.class_imbalance_ratio is not None:
-                self.class_imbalance_ratio = self.class_imbalance_ratio.to(
-                    device)
+                self.class_imbalance_ratio = self.class_imbalance_ratio.to(device)
 
     def _create_pytorch_loss(
-            self) -> Callable[[torch.Tensor, torch.Tensor], torch.Tensor]:
+        self,
+    ) -> Callable[[torch.Tensor, torch.Tensor], torch.Tensor]:
         """
         Returns loss function for pytorch backend
         """
         ce_loss_fn: torch.nn.CrossEntropyLoss = torch.nn.CrossEntropyLoss(
-            reduction='none')
+            reduction="none"
+        )
 
         def loss(output: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
             """
@@ -97,25 +100,26 @@ class CustomMultiLabelLoss(Loss):
             probabilities: torch.Tensor = output[:, 0, :]
             complement_probabilities: torch.Tensor = 1 - probabilities
             binary_output: torch.Tensor = torch.stack(
-                [complement_probabilities, probabilities], dim=1)
+                [complement_probabilities, probabilities], dim=1
+            )
 
             ce_loss: torch.Tensor = ce_loss_fn(binary_output, labels.long())
 
             if self.class_imbalance_ratio is None:
-                if self.loss_aggr_type == 'sum':
+                if self.loss_aggr_type == "sum":
                     loss: torch.Tensor = ce_loss.sum(dim=1)
                 else:
                     loss = ce_loss.mean(dim=1)
             else:
                 balancing_factors: torch.Tensor = torch.log(
-                    1 + self.class_imbalance_ratio)
+                    1 + self.class_imbalance_ratio
+                )
 
                 # loss being weighted by a factor of
                 # log(1+ class_imbalance_ratio)
-                balanced_losses: torch.Tensor = torch.mul(
-                    ce_loss, balancing_factors)
+                balanced_losses: torch.Tensor = torch.mul(ce_loss, balancing_factors)
 
-                if self.loss_aggr_type == 'sum':
+                if self.loss_aggr_type == "sum":
                     # sum balanced loss across all tasks;
                     # shape => (batch_size)
                     loss = balanced_losses.sum(dim=1)
