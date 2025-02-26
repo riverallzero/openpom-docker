@@ -6,11 +6,18 @@ Replication of "[A Principal Odor Map Unifies Diverse Tasks in Human Olfactory P
 - If not, follow official installation guide here: [Get Docker Guide](https://docs.docker.com/get-started/get-docker/), [NVIDIA Container Toolkit Installation Guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
 - To verify installation, run this command: ```$ nvidia-container-toolkit --version```
 
-## Getting started
+## Getting Started
+### Docker
 <img src="http://wes.io/Vfcs/content" width="10%">
 
 1. Download Docker Image &rarr; ```$ docker pull kangdayoung/openpom```
 2. Run Container &rarr; ```$ docker run --gpus all -it --name <container-name> kangdayoung/openpom```
+
+### Local
+CUDA 11.x & CuDNN 8.x
+
+1. ```$ pip install torch==2.0.1```
+2. ```$ pip install -r requirements.txt```
 
 ## Reference
 https://github.com/ARY2260/openpom
